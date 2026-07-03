@@ -5,20 +5,17 @@ single-page site (HTML/CSS/JS, no build step).
 
 ## Live site (GitHub Pages)
 
-This repo auto-deploys to **GitHub Pages** via
-[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml).
-
-Once the workflow has run on the default branch, the site is published at:
+Published at:
 
 - **https://sherwingalindo18.github.io/myportfoliov2/**
 
-The workflow enables Pages automatically (`configure-pages` with
-`enablement: true`) and publishes the repository root. It runs on every push to
-`main` and can also be triggered manually from the **Actions** tab
-(*Run workflow*).
+Deployment uses GitHub Pages' **Deploy from a branch** mode:
 
-> If the first run is blocked, open **Settings → Pages** and set the source to
-> **GitHub Actions**, then re-run the workflow.
+- **Settings → Pages → Build and deployment → Source: Deploy from a branch**
+- **Branch: `main` / `root`**
+
+Because `index.html` lives at the repo root and `.nojekyll` is present, Pages
+serves the site as-is (no Jekyll build). Every push to `main` republishes it.
 
 ## Custom domain
 
