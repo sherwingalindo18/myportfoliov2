@@ -23,7 +23,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   margin: 0;
@@ -332,33 +332,40 @@ h1, h2, h3, h4, p, dl, dd, figure { margin: 0; }
 .service-card p { color: var(--slate); font-size: 15px; }
 
 /* ============ Work ============ */
-.work-list { display: flex; flex-direction: column; gap: 18px; }
-.work-item {
-  display: grid; grid-template-columns: 160px 1fr auto;
-  align-items: center; gap: 32px;
+.work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.work-card {
+  display: flex; flex-direction: column;
   background: var(--panel); border: 1px solid var(--hairline);
-  border-radius: var(--radius); padding: 22px 30px 22px 22px;
-  transition: border-color .3s ease, transform .3s ease;
+  border-radius: var(--radius); overflow: hidden;
+  transition: transform .3s ease, border-color .3s ease;
 }
-.work-item:hover { border-color: var(--cobalt); transform: translateX(6px); }
-.work-item[aria-disabled="true"] { cursor: default; }
-.work-cover {
-  aspect-ratio: 16 / 11; border-radius: 10px; overflow: hidden;
-  display: grid; place-items: center; border: 1px solid var(--hairline);
+.work-card:hover { transform: translateY(-5px); border-color: var(--cobalt); }
+.work-card.is-hidden { display: none; }
+
+.work-thumb {
+  position: relative; aspect-ratio: 16 / 10; overflow: hidden;
+  background: linear-gradient(135deg, var(--panel-2), var(--ink));
+  border-bottom: 1px solid var(--hairline);
 }
-.work-cover span { font-size: 20px; font-weight: 600; color: #fff; letter-spacing: -.02em; }
-.work-cover span i { font-style: normal; opacity: .55; }
-.cover-a { background: linear-gradient(135deg, #A84E2E, #4A2113); }
-.cover-b { background: linear-gradient(135deg, #5A2140, #2A0E1E); }
-.cover-c { background: linear-gradient(135deg, #14532D, #062A16); }
-.work-tag { font-size: 12px; color: var(--slate); margin-bottom: 8px; letter-spacing: .05em; }
-.work-meta h3 { font-size: clamp(1.2rem, 2vw, 1.55rem); font-weight: 600; margin-bottom: 8px; letter-spacing: -.01em; }
-.work-meta p { color: var(--slate); font-size: 15px; max-width: 62ch; }
-.work-arrow {
-  font-size: 26px; color: var(--slate);
-  transition: color .3s ease, transform .3s ease;
+.thumb-fallback {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 30px; font-weight: 600; color: var(--slate); letter-spacing: -.02em;
 }
-.work-item:hover .work-arrow { color: var(--cobalt); transform: translateX(5px); }
+.work-thumb img {
+  position: relative; width: 100%; height: 100%; object-fit: cover;
+  object-position: top; transition: transform .5s ease;
+}
+.work-card:hover .work-thumb img { transform: scale(1.045); }
+
+.work-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.work-tag { font-size: 11px; color: var(--slate); letter-spacing: .06em; text-transform: uppercase; }
+.work-body h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -.01em; }
+.work-ext { color: var(--slate); font-size: .95em; transition: color .3s ease; }
+.work-card:hover .work-ext { color: var(--cobalt); }
+.work-desc { color: var(--slate); font-size: 14px; line-height: 1.55; flex: 1; }
+.work-url { font-size: 11.5px; color: var(--cobalt); margin-top: 2px; word-break: break-all; }
+
+.work-more { text-align: center; margin-top: 40px; }
 
 /* ============ Why ============ */
 .stats-grid {
@@ -482,8 +489,7 @@ h1, h2, h3, h4, p, dl, dd, figure { margin: 0; }
   .contact-grid { grid-template-columns: 1fr; gap: 40px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 
-  .work-item { grid-template-columns: 120px 1fr; }
-  .work-arrow { display: none; }
+  .work-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* Mobile */
@@ -507,8 +513,7 @@ h1, h2, h3, h4, p, dl, dd, figure { margin: 0; }
   .stat { padding: 22px 18px; }
   .why-list { grid-template-columns: 1fr; }
 
-  .work-item { grid-template-columns: 1fr; gap: 18px; padding: 18px; }
-  .work-cover { aspect-ratio: 16 / 8; }
+  .work-grid { grid-template-columns: 1fr; gap: 16px; }
 
   .form-row { grid-template-columns: 1fr; gap: 0; }
   .contact-form { padding: 24px 20px; }
