@@ -151,3 +151,59 @@
     btn.parentElement.remove();
   });
 })();
+
+/* ---------- Project thumbnails (WordPress mShots) ----------
+   mShots returns a small "generating…" placeholder on the first request and
+   only serves the real screenshot once it has been captured. We lazy-load each
+   thumbnail when its card scrolls into view, then poll until the full-size
+   image is ready before fading it in. If it never resolves, the monogram
+   fallback behind the image stays visible. */
+(function () {
+  var shots = [].slice.call(document.querySelectorAll("img.shot[data-src]"));
+  if (!shots.length) return;
+
+  var MAX_TRIES = 10;      // ~25s of polling per thumbnail
+  var RETRY_MS = 2500;
+  var REAL_MIN_WIDTH = 500; // mShots placeholder is ~400px wide; real shot is 800
+
+  function load(img) {
+    if (img.dataset.loading) return;
+    img.dataset.loading = "1";
+    var url = img.getAttribute("data-src");
+    var tries = 0;
+
+    function attempt() {
+      tries++;
+      var probe = new Image();
+      probe.onload = function () {
+        if (probe.naturalWidth >= REAL_MIN_WIDTH || tries >= MAX_TRIES) {
+          img.src = probe.src;
+          img.classList.add("is-ready");
+        } else {
+          setTimeout(attempt, RETRY_MS);
+        }
+      };
+      probe.onerror = function () {
+        if (tries < MAX_TRIES) setTimeout(attempt, RETRY_MS);
+      };
+      probe.src = url;
+    }
+    attempt();
+  }
+
+  if (!("IntersectionObserver" in window)) {
+    shots.forEach(load);
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        load(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: "200px" });
+
+  shots.forEach(function (img) { io.observe(img); });
+})();
