@@ -136,3 +136,18 @@
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
+
+/* ---------- Show all projects ---------- */
+(function () {
+  var btn = document.getElementById("showAllWork");
+  var grid = document.getElementById("workGrid");
+  if (!btn || !grid) return;
+  btn.addEventListener("click", function () {
+    grid.querySelectorAll(".work-card.is-hidden").forEach(function (card) {
+      card.classList.remove("is-hidden");
+      card.classList.add("in");
+    });
+    btn.setAttribute("aria-expanded", "true");
+    btn.parentElement.remove();
+  });
+})();
